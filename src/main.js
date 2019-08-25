@@ -69,10 +69,10 @@ renderComponent(
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
 renderComponent(filmsListElement, createShowMoreButtonTemplate(), `beforeend`);
-renderComponent(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+// renderComponent(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
 
-const commentsListElement = document.querySelector(`.film-details__comments-list`);
+// const commentsListElement = document.querySelector(`.film-details__comments-list`);
 
-window.filma = films[0].comments;
+// window.filma = films[0].comments;
 
-renderComponent(commentsListElement, films[0].comments.map((it) => createCommentTemplate(it)).join(``), `beforeend`);
+// renderComponent(commentsListElement, films[0].comments.map((it) => createCommentTemplate(it)).join(``), `beforeend`);

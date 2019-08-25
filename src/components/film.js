@@ -1,11 +1,13 @@
-export const createFilmTemplate = ({title, raiting, year, duration, genre, posterUrl, description, comments}) => {
+import {getRandomInt, formatDuration} from "../utils.js";
+
+export const createFilmTemplate = ({title, raiting, year, duration, genres, posterUrl, description, comments}) => {
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${raiting}</p>
     <p class="film-card__info">
       <span class="film-card__year">${year}</span>
-      <span class="film-card__duration">${duration}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__duration">${formatDuration(duration)}</span>
+      <span class="film-card__genre">${Array.from(genres)[getRandomInt(0, genres.size - 1)]}</span>
     </p>
     <img src="${posterUrl}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
