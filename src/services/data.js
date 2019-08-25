@@ -18,7 +18,7 @@ export const getFilmCard = () => ({
     `The Prestige`,
     `A Beautiful Mind`,
     `Gladiator`
-  ][getRandomInt(0, 15)],
+  ][getRandomInt(0, 14)],
   posterUrl: [
     `./images/posters/made-for-each-other.png`,
     `./images/posters/popeye-meets-sinbad.png`,
