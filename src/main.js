@@ -7,6 +7,10 @@ import {createFilmsListTemplate} from './components/films-list.js';
 import {createFilmTemplate} from './components/film.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
 import {createFilmPopupTemplate} from './components/film-popup.js';
+import {createCommentTemplate} from "./components/comment.js";
+import {getFilmCard} from './services/data.js';
+import {getRandomInt} from './utils.js';
+
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -20,23 +24,55 @@ const renderComponent = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const films = new Array(filmsCount).fill(``).map(() => createFilmTemplate());
-const topRatedFilms = new Array(topRatedFilmsCount).fill(``).map(() => createFilmTemplate());
-const mostCommentedFilms = new Array(mostCommentedFilmsCount).fill(``).map(() => createFilmTemplate());
+const films = new Array(filmsCount).fill(``).map(() => getFilmCard());
+const topRatedFilms = films.sort((a, b) => b.raiting - a.raiting).slice(0, topRatedFilmsCount);
+const mostCommentedFilms = films.sort((a, b) => b.commentsCount - a.commentsCount).slice(0, mostCommentedFilmsCount);
+// TODO
+// comments section to the bottom of popup
 
 renderComponent(headerElement, createSearchTemplate(), `beforeend`);
-renderComponent(headerElement, createProfileTemplate(), `beforeend`);
-renderComponent(mainElement, createSiteMenuTemplate(), `beforeend`);
+renderComponent(headerElement, createProfileTemplate(getRandomInt(0, 30)), `beforeend`);
+renderComponent(mainElement, createSiteMenuTemplate(films.length), `beforeend`);
 renderComponent(mainElement, createSortingTemplate(), `beforeend`);
 renderComponent(mainElement, createBoardTemplate(), `beforeend`);
 
 const boardElement = mainElement.querySelector(`.films`);
 
-renderComponent(boardElement, createFilmsListTemplate(`All movies. Upcoming`, films.join(`\n`), false, true), `beforeend`);
-renderComponent(boardElement, createFilmsListTemplate(`Top rated`, topRatedFilms.join(`\n`), true, false), `beforeend`);
-renderComponent(boardElement, createFilmsListTemplate(`Most commented`, mostCommentedFilms.join(`\n`), true, false), `beforeend`);
+renderComponent(
+    boardElement,
+    createFilmsListTemplate({
+      title: `All movies. Upcoming`,
+      content: films.map((it) => createFilmTemplate(it)).join(``),
+      isHidden: true
+    }),
+    `beforeend`
+);
+renderComponent(
+    boardElement,
+    createFilmsListTemplate({
+      title: `Top rated`,
+      content: topRatedFilms.map((it) => createFilmTemplate(it)).join(``),
+      isExtra: true
+    }),
+    `beforeend`
+);
+renderComponent(
+    boardElement,
+    createFilmsListTemplate({
+      title: `Most commented`,
+      content: mostCommentedFilms.map((it) => createFilmTemplate(it)).join(``),
+      isExtra: true
+    }),
+    `beforeend`
+);
 
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
 renderComponent(filmsListElement, createShowMoreButtonTemplate(), `beforeend`);
-renderComponent(footerElement, createFilmPopupTemplate(), `afterend`);
+renderComponent(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+
+const commentsListElement = document.querySelector(`.film-details__comments-list`);
+
+window.filma = films[0].comments;
+
+renderComponent(commentsListElement, films[0].comments.map((it) => createCommentTemplate(it)).join(``), `beforeend`);
