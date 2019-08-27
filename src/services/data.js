@@ -1,7 +1,9 @@
 import {getRandomInt} from '../utils.js';
 import {getComments} from './comments-data.js';
 
-export const getFilmCard = () => ({
+const FILMS_COUNT = 15;
+
+export const films = new Array(FILMS_COUNT).fill(``).map(() => ({
   title: [
     `The Shawshank Redemption`,
     `The Green Mile`,
@@ -60,4 +62,4 @@ export const getFilmCard = () => ({
   ageRaiting: getRandomInt(0, 18),
   originalTitle: `ORIGINAL`,
   comments: new Array(getRandomInt(0, 10)).fill(``).map(() => getComments()),
-});
+}));
