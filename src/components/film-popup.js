@@ -1,4 +1,4 @@
-import {formatDuration, formatDate} from "../utils";
+import {formatDuration, formatDate} from '../utils';
 
 export const createFilmPopupTemplate = ({title, posterUrl, originalTitle, raiting, ageRaiting, director, writers, actors, releaseDateUTC, duration, country, genres, fullDescription, comments, isWatchlisted, isWatched, isFavorite}) => {
   return `<section class="film-details">

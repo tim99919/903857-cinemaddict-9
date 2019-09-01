@@ -6,13 +6,13 @@ export const createBoardTemplate = (allMovies, topRatedMovies, mostCommentedMovi
         ${allMovies ? allMovies : `There are no movies in our database`}
       </div>
     </section>
-    <section class="films-list--extra ${topRatedMovies ? `` : `visually-hidden`}">
+    <section class="films-list--extra ${topRatedMovies ? null : `visually-hidden`}">
       <h2 class="films-list__title">Top rated</h2>
       <div class="films-list__container">
         ${topRatedMovies}
       </div>
     </section>
-    <section class="films-list--extra ${mostCommentedMovies ? `` : `visually-hidden`}">
+    <section class="films-list--extra ${mostCommentedMovies ? null : `visually-hidden`}">
       <h2 class="films-list__title">Most commented</h2>
       <div class="films-list__container">
         ${mostCommentedMovies}

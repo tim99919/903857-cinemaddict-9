@@ -1,4 +1,4 @@
-import {getRandomInt, formatDuration} from "../utils.js";
+import {getRandomInt, formatDuration} from '../utils.js';
 
 export const createFilmTemplate = ({title, raiting, year, duration, genres, posterUrl, description, comments, isWatchlisted, isWatched, isFavorite}) => {
   return `<article class="film-card">

@@ -1,4 +1,4 @@
-import {films} from "../services/data.js";
+import {films} from '../services/data.js';
 
 export const createSiteMenuTemplate = () => {
   return `<nav class="main-navigation">

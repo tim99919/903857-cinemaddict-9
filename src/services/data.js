@@ -1,4 +1,4 @@
-import {getFilmData} from "../services/film-data.js";
+import {getFilmData} from '../services/film-data.js';
 
 const FILMS_COUNT = 15;
 

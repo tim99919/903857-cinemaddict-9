@@ -6,7 +6,7 @@ import {createBoardTemplate} from './components/board.js';
 import {createFilmTemplate} from './components/film.js';
 import {renderShowMoreButton} from './components/show-more-button.js';
 import {createFilmPopupTemplate} from './components/film-popup.js';
-import {createCommentTemplate} from "./components/comment.js";
+import {createCommentTemplate} from './components/comment.js';
 import {films} from './services/data.js';
 import {getRandomInt} from './utils.js';
 
@@ -36,16 +36,16 @@ renderComponent(mainElement, createSortingTemplate(), `beforeend`);
 renderComponent(
     mainElement,
     createBoardTemplate(
-        films.
-          slice(0, START_FILMS_COUNT).
-          map((it) => createFilmTemplate(it)).
-          join(``),
-        topRatedFilms.
-          map((it) => createFilmTemplate(it)).
-          join(``),
-        mostCommentedFilms.
-          map((it) => createFilmTemplate(it)).
-          join(``)
+        films
+          .slice(0, START_FILMS_COUNT)
+          .map((it) => createFilmTemplate(it))
+          .join(``),
+        topRatedFilms
+          .map((it) => createFilmTemplate(it))
+          .join(``),
+        mostCommentedFilms
+          .map((it) => createFilmTemplate(it))
+          .join(``)
     ),
     `beforeend`
 );
