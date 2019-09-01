@@ -6,5 +6,5 @@ export const getUserRank = (filmsCount) => {
   } else if (filmsCount > 0 && filmsCount <= 10) {
     return `novice`;
   }
-  return ``;
+  return null;
 };

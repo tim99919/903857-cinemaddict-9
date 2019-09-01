@@ -1,4 +1,4 @@
-import {msToDays} from "../utils.js";
+import {msToDays} from '../utils.js';
 
 export const createCommentTemplate = ({emotion, text, author, date}) => {
   return `<li class="film-details__comment">

@@ -1,7 +1,4 @@
-
-
 export const renderShowMoreButton = (buttonContainer, filmsContainer, renderData, cardsCount, createTemplate) => {
-
   let content = renderData.slice(cardsCount);
 
   const createShowMoreButtonTemplate = () => {
@@ -23,7 +20,7 @@ export const renderShowMoreButton = (buttonContainer, filmsContainer, renderData
   };
 
   const hideShowMoreButton = () => {
-    if (content.length === 0) {
+    if (!content.length) {
       button.classList.add(`visually-hidden`);
       button.removeEventListener(`click`, onShowMoreClick);
     }

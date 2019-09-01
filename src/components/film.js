@@ -1,6 +1,6 @@
 import {getRandomInt, formatDuration} from "../utils.js";
 
-export const createFilmTemplate = ({title, raiting, year, duration, genres, posterUrl, description, comments}) => {
+export const createFilmTemplate = ({title, raiting, year, duration, genres, posterUrl, description, comments, isWatchlisted, isWatched, isFavorite}) => {
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${raiting}</p>
@@ -13,9 +13,15 @@ export const createFilmTemplate = ({title, raiting, year, duration, genres, post
     <p class="film-card__description">${description}</p>
     <a class="film-card__comments">${comments.length} comments</a>
     <form class="film-card__controls">
-      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-      <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchlisted ? `film-card__controls-item--active` : null}">
+        Add to watchlist
+      </button>
+      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : null}">
+        Mark as watched
+      </button>
+      <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : null}">
+        Mark as favorite
+      </button>
     </form>
   </article>`;
 };

@@ -1,6 +1,6 @@
 const MINUTES_PER_HOUR = 60;
 
-const calendar = [
+const monthes = [
   `January`,
   `February`,
   `March`,
@@ -22,11 +22,11 @@ const formatDuration = (minutes) => `${Math.floor(minutes / MINUTES_PER_HOUR)}h 
 const formatDate = (dateUTC) => {
   const date = new Date(dateUTC);
   const day = date.getDate();
-  const month = calendar[date.getMonth()];
+  const month = monthes[date.getMonth()];
   const year = date.getFullYear();
   return `${day > 9 ? `` : `0`}${day} ${month} ${year}`;
 };
 
 const msToDays = (ms) => Math.floor(ms / 1000 / 60 / 60 / 24);
 
-export {getRandomInt, calendar, formatDuration, formatDate, msToDays};
+export {getRandomInt, monthes, formatDuration, formatDate, msToDays};
