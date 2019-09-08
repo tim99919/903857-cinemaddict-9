@@ -1,39 +1,50 @@
-export const renderShowMoreButton = (buttonContainer, filmsContainer, renderData, cardsCount, createTemplate) => {
-  let content = renderData.slice(cardsCount);
+import {createElement, render, Position} from "../utils.js";
 
-  const createShowMoreButtonTemplate = () => {
-    return `<button class="films-list__show-more visually-hidden">Show more</button>`;
-  };
+export class ShowMoreButton {
+  constructor({targetContainer, renderElements, cardsCount}) {
+    // this._buttonContainer = buttonContainer;
+    this._targetContainer = targetContainer;
+    this._renderElements = renderElements;
+    this._cardsCount = cardsCount;
+    // this._createTemplate = createTemplate;
+    // this._content = this._renderData.slice(cardsCount);
+    this._element = null;
+  }
 
-  const renderMoreFilms = () => {
-    filmsContainer.insertAdjacentHTML(
-        `beforeend`,
-        content.splice(0, cardsCount).map((it) => createTemplate(it)).join(``)
-    );
-  };
+  getTemplate() {
+    return `<button class="films-list__show-more">Show more</button>`;
+  }
 
-  const showShowMoreButton = () => {
-    if (content.length > 5) {
-      button.classList.remove(`visually-hidden`);
-      button.addEventListener(`click`, onShowMoreClick);
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
     }
-  };
 
-  const hideShowMoreButton = () => {
-    if (!content.length) {
-      button.classList.add(`visually-hidden`);
-      button.removeEventListener(`click`, onShowMoreClick);
-    }
-  };
+    return this._element;
+  }
 
-  const onShowMoreClick = () => {
-    renderMoreFilms();
-    hideShowMoreButton();
-  };
+  showMoreFilms() {
+    this._renderElements.splice(0, this._cardsCount).forEach((it) => render(this._targetContainer, it, Position.BEFOREEND));
+  }
 
-  buttonContainer.insertAdjacentHTML(`beforeend`, createShowMoreButtonTemplate());
+  // showShowMoreButton() {
+  //   if (this._renderElements.length) {
+  //     this._element.classList.remove(`visually-hidden`);
+  //     this._element.addEventListener(`click`, this.onShowMoreClick);
+  //   }
+  // }
 
-  const button = buttonContainer.querySelector(`.films-list__show-more`);
+  hideShowMoreButton() {
+    // if (!this._renderElements.length) {
+      this._element.classList.add(`visually-hidden`);
+      // this._element.removeEventListener(`click`, this.onShowMoreClick);
+    // }
+  }
 
-  showShowMoreButton(button);
-};
+  onShowMoreButtonClick() {
+    return () => {
+      this.showMoreFilms();
+      this.hideShowMoreButton();
+    };
+  }
+}

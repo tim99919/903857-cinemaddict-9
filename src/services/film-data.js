@@ -41,7 +41,6 @@ export const getFilmData = () => ({
     `Drama`,
     `Film-Noir`
   ]),
-  // commentsCount: getRandomInt(0, 50),
   userMark: null,
   director: `Kventin Tarantino`,
   writers: new Set([
