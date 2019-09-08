@@ -2,7 +2,9 @@ import {films} from '../services/data.js';
 import {createElement} from "../utils.js";
 
 export class SiteMenu {
-  constructor() { }
+  constructor() {
+    this._element = null;
+  }
 
   getTemplate() {
     return `

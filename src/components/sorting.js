@@ -1,7 +1,9 @@
 import {createElement} from "../utils.js";
 
 export class Sorting {
-  constructor() { }
+  constructor() {
+    this._element = null;
+  }
 
   getTemplate() {
     return `
@@ -15,7 +17,7 @@ export class Sorting {
 
   getElement() {
     if (!this._element) {
-      return createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     this._element = this._element;
