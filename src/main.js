@@ -40,11 +40,18 @@ const renderFilm = (filmData, container, place) => {
   const filmDetails = new FilmPopup(filmData);
   const filmComments = filmData.comments.map((it) => new Comment(it));
 
-  const onFilmCardClick = () => {
-    render(footerElement, filmDetails.getElement(), Position.AFTEREND);
-    filmComments.forEach((it) => render(filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
-    document.addEventListener(`keydown`, onPopupEscKeyDown);
-    filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
+  const onFilmCardClick = (evt) => {
+    let target = evt.target;
+    if (
+      target.className === `film-card__poster` ||
+      target.className === `film-card__title` ||
+      target.className === `film-card__comments`
+    ) {
+      render(footerElement, filmDetails.getElement(), Position.AFTEREND);
+      filmComments.forEach((it) => render(filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
+      document.addEventListener(`keydown`, onPopupEscKeyDown);
+      filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
+    }
   };
 
   const onPopupCloseButtonClick = () => {
@@ -59,14 +66,7 @@ const renderFilm = (filmData, container, place) => {
     }
   };
 
-  for (let elemet of [
-    film.getElement().querySelector(`.film-card__title`),
-    film.getElement().querySelector(`.film-card__poster`),
-    film.getElement().querySelector(`.film-card__comments`),
-  ]) {
-    elemet.addEventListener(`click`, onFilmCardClick);
-  }
-
+  film.getElement().addEventListener(`click`, onFilmCardClick);
   render(container, film.getElement(), place);
 };
 

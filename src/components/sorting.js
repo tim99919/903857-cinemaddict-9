@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {createElement} from '../utils.js';
 
 export class Sorting {
   constructor() {
@@ -20,6 +20,6 @@ export class Sorting {
       this._element = createElement(this.getTemplate());
     }
 
-    this._element = this._element;
+    return this._element;
   }
 }

@@ -52,9 +52,6 @@ const render = (container, element, place) => {
     case Position.AFTEREND:
       container.after(element);
       break;
-
-    default:
-      break;
   }
 };
 
