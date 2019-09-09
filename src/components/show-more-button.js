@@ -1,39 +1,23 @@
-export const renderShowMoreButton = (buttonContainer, filmsContainer, renderData, cardsCount, createTemplate) => {
-  let content = renderData.slice(cardsCount);
+import {createElement} from '../utils.js';
 
-  const createShowMoreButtonTemplate = () => {
-    return `<button class="films-list__show-more visually-hidden">Show more</button>`;
-  };
+export class ShowMoreButton {
+  constructor() {
+    this._element = null;
+  }
 
-  const renderMoreFilms = () => {
-    filmsContainer.insertAdjacentHTML(
-        `beforeend`,
-        content.splice(0, cardsCount).map((it) => createTemplate(it)).join(``)
-    );
-  };
+  getTemplate() {
+    return `<button class="films-list__show-more">Show more</button>`;
+  }
 
-  const showShowMoreButton = () => {
-    if (content.length > 5) {
-      button.classList.remove(`visually-hidden`);
-      button.addEventListener(`click`, onShowMoreClick);
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
     }
-  };
 
-  const hideShowMoreButton = () => {
-    if (!content.length) {
-      button.classList.add(`visually-hidden`);
-      button.removeEventListener(`click`, onShowMoreClick);
-    }
-  };
+    return this._element;
+  }
 
-  const onShowMoreClick = () => {
-    renderMoreFilms();
-    hideShowMoreButton();
-  };
-
-  buttonContainer.insertAdjacentHTML(`beforeend`, createShowMoreButtonTemplate());
-
-  const button = buttonContainer.querySelector(`.films-list__show-more`);
-
-  showShowMoreButton(button);
-};
+  hideShowMoreButton() {
+    this._element.classList.add(`visually-hidden`);
+  }
+}

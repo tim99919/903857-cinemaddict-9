@@ -1,6 +1,6 @@
 import {getRandomInt} from '../utils.js';
 
-export const getComments = () => ({
+export const getComment = () => ({
   emotion: [
     `./images/emoji/angry.png`,
     `./images/emoji/puke.png`,

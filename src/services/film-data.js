@@ -1,5 +1,5 @@
 import {getRandomInt} from '../utils.js';
-import {getComments} from './comments-data.js';
+import {getComment} from './comments-data.js';
 
 export const getFilmData = () => ({
   title: [
@@ -41,7 +41,6 @@ export const getFilmData = () => ({
     `Drama`,
     `Film-Noir`
   ]),
-  // commentsCount: getRandomInt(0, 50),
   userMark: null,
   director: `Kventin Tarantino`,
   writers: new Set([
@@ -63,7 +62,7 @@ export const getFilmData = () => ({
     .join(`. `),
   ageRaiting: getRandomInt(0, 18),
   originalTitle: `ORIGINAL`,
-  comments: new Array(getRandomInt(0, 10)).fill(``).map(() => getComments()),
+  comments: new Array(getRandomInt(0, 10)).fill(``).map(() => getComment()),
   isWatchlisted: Boolean(getRandomInt(0, 1)),
   isWatched: Boolean(getRandomInt(0, 1)),
   isFavorite: Boolean(getRandomInt(0, 1)),
