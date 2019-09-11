@@ -1,10 +1,11 @@
-import {createElement} from '../utils.js';
+import {AbstractComponent} from './abstract-component';
 
-export class Board {
+export class Board extends AbstractComponent {
   constructor(moviesCount) {
+    super();
     this._moviesCount = moviesCount;
-    this._element = null;
   }
+
 
   getTemplate() {
     return `
@@ -29,13 +30,5 @@ export class Board {
         </section>
       </section>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

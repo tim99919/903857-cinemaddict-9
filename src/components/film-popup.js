@@ -1,6 +1,7 @@
-import {formatDuration, formatDate, createElement} from '../utils';
+import {AbstractComponent} from './abstract-component';
+import {formatDuration, formatDate} from '../utils';
 
-export class FilmPopup {
+export class FilmPopup extends AbstractComponent {
   constructor({
     title,
     posterUrl,
@@ -20,6 +21,7 @@ export class FilmPopup {
     isWatched,
     isFavorite
   }) {
+    super();
     this._title = title;
     this._posterUrl = posterUrl;
     this._originalTitle = originalTitle;
@@ -160,13 +162,5 @@ export class FilmPopup {
         </form>
       </section>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

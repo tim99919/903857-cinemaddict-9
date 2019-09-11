@@ -1,8 +1,9 @@
+import {AbstractComponent} from './abstract-component.js';
 import {getUserRank} from '../services/user-rank.js';
-import {createElement} from '../utils.js';
 
-export class Profile {
+export class Profile extends AbstractComponent {
   constructor(watchedFilms) {
+    super();
     this._watchedFilms = watchedFilms;
     this._element = null;
   }
@@ -16,13 +17,5 @@ export class Profile {
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       </section>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }
