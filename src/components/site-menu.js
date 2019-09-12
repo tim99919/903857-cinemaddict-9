@@ -1,8 +1,9 @@
+import {AbstractComponent} from './abstract-component.js';
 import {films} from '../services/data.js';
-import {createElement} from '../utils.js';
 
-export class SiteMenu {
+export class SiteMenu extends AbstractComponent {
   constructor() {
+    super();
     this._element = null;
   }
 
@@ -22,13 +23,5 @@ export class SiteMenu {
         <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
       </nav>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

@@ -1,9 +1,9 @@
-import {createElement} from '../utils.js';
+import {AbstractComponent} from './abstract-component';
 
-export class Board {
+export class Board extends AbstractComponent {
   constructor(moviesCount) {
+    super();
     this._moviesCount = moviesCount;
-    this._element = null;
   }
 
   getTemplate() {
@@ -12,16 +12,16 @@ export class Board {
         <section class="films-list">
           <h2 class="films-list__title">All movies. Upcoming</h2>
           <div class="films-list__container">
-            ${this._moviesCount ? `` : `There are no movies in our database`}
+
           </div>
         </section>
-        <section class="films-list--extra ${this._moviesCount ? `` : `visually-hidden`}">
+        <section class="films-list--extra">
           <h2 class="films-list__title">Top rated</h2>
           <div class="films-list__container">
 
           </div>
         </section>
-        <section class="films-list--extra ${this._moviesCount ? `` : `visually-hidden`}">
+        <section class="films-list--extra">
           <h2 class="films-list__title">Most commented</h2>
           <div class="films-list__container">
 
@@ -29,13 +29,5 @@ export class Board {
         </section>
       </section>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

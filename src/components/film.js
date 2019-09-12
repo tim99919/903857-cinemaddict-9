@@ -1,7 +1,9 @@
-import {getRandomInt, formatDuration, createElement} from '../utils.js';
+import {AbstractComponent} from './abstract-component.js';
+import {getRandomInt, formatDuration} from '../utils.js';
 
-export class Film {
+export class Film extends AbstractComponent {
   constructor({title, raiting, year, duration, genres, posterUrl, description, comments, isWatchlisted, isWatched, isFavorite}) {
+    super();
     this._title = title;
     this._raiting = raiting;
     this._year = year;
@@ -42,13 +44,5 @@ export class Film {
         </form>
       </article>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

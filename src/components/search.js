@@ -1,7 +1,8 @@
-import {createElement} from '../utils.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class Search {
+export class Search extends AbstractComponent {
   constructor() {
+    super();
     this._element = null;
   }
 
@@ -16,13 +17,5 @@ export class Search {
         <button class="search__reset" type="reset">Reset</button>
       </form>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }

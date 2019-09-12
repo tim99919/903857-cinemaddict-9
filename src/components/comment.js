@@ -1,7 +1,9 @@
-import {msToDays, createElement} from '../utils.js';
+import {AbstractComponent} from './abstract-component';
+import {msToDays} from '../utils.js';
 
-export class Comment {
+export class Comment extends AbstractComponent {
   constructor({emotion, text, author, date}) {
+    super();
     this._emotion = emotion;
     this._text = text;
     this._author = author;
@@ -25,13 +27,5 @@ export class Comment {
         </div>
       </li>
     `;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }
