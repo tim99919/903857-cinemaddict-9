@@ -1,9 +1,7 @@
 import {Board} from './components/board';
-import {Film} from './components/film';
-import {FilmPopup} from './components/film-popup';
-import {Comment} from './components/comment';
 import {Sorting} from './components/sorting';
 import {ShowMoreButton} from './components/show-more-button';
+import {MovieController} from './movie-controller';
 import {render, unrender, Position} from './utils';
 
 export class PageController {
@@ -18,9 +16,9 @@ export class PageController {
   init() {
     if (!this._data) {
       this._getFilmsListElement().textContent = `There are no movies in our database`;
-      render(this._container, this._board.getElement(), Position.BEFOREEND);
       this._getMostCommentedFilmsListElement().parentElement.classList.add(`visually-hidden`);
       this._getTopRatedFilmsListElement().parentElement.classList.add(`visually-hidden`);
+      render(this._container, this._board.getElement(), Position.BEFOREEND);
 
       return;
     }
@@ -69,38 +67,7 @@ export class PageController {
   }
 
   _renderFilm(filmData, container) {
-    const film = new Film(filmData);
-    const filmDetails = new FilmPopup(filmData);
-    const filmComments = filmData.comments.map((it) => new Comment(it));
-
-    const onFilmCardClick = (evt) => {
-      let target = evt.target;
-      if (
-        target.className === `film-card__poster` ||
-        target.className === `film-card__title` ||
-        target.className === `film-card__comments`
-      ) {
-        render(document.body, filmDetails.getElement(), Position.BEFOREEND);
-        filmComments.forEach((it) => render(filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
-        document.addEventListener(`keydown`, onPopupEscKeyDown);
-        filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
-      }
-    };
-
-    const onPopupCloseButtonClick = () => {
-      unrender(filmDetails.getElement());
-      document.removeEventListener(`keydown`, onPopupEscKeyDown);
-    };
-
-    const onPopupEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        unrender(filmDetails.getElement());
-        document.removeEventListener(`keydown`, onPopupEscKeyDown);
-      }
-    };
-
-    film.getElement().addEventListener(`click`, onFilmCardClick);
-    render(container, film.getElement(), Position.BEFOREEND);
+    return new MovieController(container, filmData);
   }
 
   _onShowMoreButtonClick() {
