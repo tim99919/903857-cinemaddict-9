@@ -12,7 +12,9 @@ export class PageController {
     this._board = new Board();
     this._showMoreButton = new ShowMoreButton();
 
+    this._subscriptions = [];
     this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
   }
 
   init() {
@@ -28,10 +30,14 @@ export class PageController {
     this._renderBoard();
   }
 
-  _onDataChange(newData, oldData) {
+  _onDataChange(newData, oldData, id = null) {
     const i = this._data.findIndex((it) => it === oldData);
     this._data[i] = newData;
-    this._renderBoard(this._data[i].id);
+    this._renderBoard(id);
+  }
+
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
   }
 
   _getFilmsListElement() {
@@ -89,7 +95,8 @@ export class PageController {
   }
 
   _renderFilm(filmData, container, id = null) {
-    return new MovieController(container, filmData, this._onDataChange, id);
+    const movieController = new MovieController(container, filmData, this._onDataChange, this._onChangeView, id);
+    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
   }
 
   _onShowMoreButtonClick() {

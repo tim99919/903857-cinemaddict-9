@@ -4,10 +4,11 @@ import {Comment} from './components/comment';
 import {render, unrender, Position} from './utils';
 
 export class MovieController {
-  constructor(container, data, onDataChange, filmDetilsOpenedId = null) {
+  constructor(container, data, onDataChange, _onChangeView, filmDetilsOpenedId = null) {
     this._container = container;
     this._data = data;
     this._onDataChange = onDataChange;
+    this._onChangeView = _onChangeView;
     this._filmDetilsOpenedId = filmDetilsOpenedId;
     this._film = new Film(data);
     this._filmDetails = new FilmPopup(data);
@@ -28,14 +29,15 @@ export class MovieController {
     };
 
     const renderFilmDetails = () => {
-      unrender(this._filmDetails.getElement());
-      this._filmDetails.removeElement();
+      this._onChangeView();
+      // this._filmDetails.removeElement();
 
       render(document.body, this._filmDetails.getElement(), Position.BEFOREEND);
       this._filmComments.forEach((it) => render(this._filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
       document.addEventListener(`keydown`, onPopupEscKeyDown);
       this._filmDetails.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, onFilmDetailsFormControlsClick);
       this._filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
+      this._filmDetails.getElement().querySelector(`.film-details__new-comment`).addEventListener(`focus`, onCommentFocus, true);
     }
 
     const onPopupCloseButtonClick = () => {
@@ -45,6 +47,7 @@ export class MovieController {
 
     const onPopupEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
+        // this.setDefaultView();
         unrender(this._filmDetails.getElement());
         document.removeEventListener(`keydown`, onPopupEscKeyDown);
       }
@@ -54,31 +57,27 @@ export class MovieController {
       const oldData = this._data;
       const newData = {...this._data};
       evt.preventDefault();
+
       if (evt.target.className.includes(`film-card__controls-item--add-to-watchlist`) ||
           evt.target.className.includes(`film-details__control-label--watchlist`)) {
         newData.isWatchlisted = !newData.isWatchlisted;
 
-        console.log(1);
       } else if (evt.target.className.includes(`film-card__controls-item--mark-as-watched`) ||
                  evt.target.className.includes(`film-details__control-label--watched`)) {
         newData.isWatched = !newData.isWatched;
-        console.log(2);
       } else {
         newData.isFavorite = !newData.isFavorite;
-        console.log(3);
       }
-      console.log(newData);
 
       this._onDataChange(newData, oldData);
     };
 
-    // TODO
-    // Добавить чтобы попап рендерился с новыми данными после клика по контролам
     const onFilmDetailsFormControlsClick = (evt) => {
       const oldData = this._data;
       const newData = {...this._data};
+
       evt.preventDefault();
-      unrender(this._filmDetails.getElement());
+      this._onChangeView();
       this._filmDetails.removeElement();
 
       if (evt.target.className.includes(`film-details__control-label--watchlist`)) {
@@ -89,11 +88,50 @@ export class MovieController {
         newData.isFavorite = !newData.isFavorite;
       }
 
-      console.log(newData.isWatchlisted);
-      console.log(newData.isWatched);
-      console.log(newData.isFavorite);
+      this._onDataChange(newData, oldData, this._data.id);
+    };
 
-      this._onDataChange(newData, oldData);
+    const onCommentFocus = () => {
+      const pressed = new Set();
+
+      const onCommentCtrlEnterKeydown = (evt) => {
+        pressed.add(evt.code);
+
+        if (!((pressed.has(`ControlLeft`) ||
+               pressed.has(`ControlRight`) ||
+               pressed.has(`MetaLeft`) ||
+               pressed.has(`MetaRight`)) &&
+               pressed.has(`Enter`))) {
+          return;
+        }
+        console.log(pressed);
+
+        pressed.clear();
+
+        unrender(this._filmDetails.getElement());
+        this._filmDetails.removeElement();
+        this._onDataChange(null, null, this._data.id);
+      }
+
+      const onCommentCtrlEnterKeyup = (evt) => {
+        pressed.delete(evt.code);
+
+        // document.removeEventListener('keydown', onCommentCtrlEnterKeydown);
+        // document.removeEventListener('keyup', onCommentCtrlEnterKeyup);
+      };
+
+      const onCommentBlur = () => {
+        document.removeEventListener('keydown', onCommentCtrlEnterKeydown);
+        document.removeEventListener('keyup', onCommentCtrlEnterKeyup);
+        console.log(`blured`);
+      }
+
+      this._filmDetails.getElement().querySelector(`.film-details__new-comment`).addEventListener(`blur`, onCommentBlur, true);
+
+      document.addEventListener('keydown', onCommentCtrlEnterKeydown);
+      document.addEventListener('keyup', onCommentCtrlEnterKeyup);
+      console.log(`focused`);
+
     };
 
     this._film.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, onFilmFormControlsClick);
@@ -102,6 +140,12 @@ export class MovieController {
 
     if (this._filmDetilsOpenedId === this._data.id) {
       renderFilmDetails();
+    }
+  }
+
+  setDefaultView() {
+    if (document.contains(this._filmDetails.getElement())) {
+      unrender(this._filmDetails.getElement());
     }
   }
 }
