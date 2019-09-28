@@ -1,7 +1,12 @@
 import {getRandomInt} from '../utils.js';
 import {getComment} from './comments-data.js';
 
+let id = 0;
+
+const getId = () => ++id;
+
 export const getFilmData = () => ({
+  id: getId(),
   title: [
     `The Shawshank Redemption`,
     `The Green Mile`,
