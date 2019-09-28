@@ -30,7 +30,6 @@ export class MovieController {
 
     const renderFilmDetails = () => {
       this._onChangeView();
-      // this._filmDetails.removeElement();
 
       render(document.body, this._filmDetails.getElement(), Position.BEFOREEND);
       this._filmComments.forEach((it) => render(this._filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
@@ -47,7 +46,6 @@ export class MovieController {
 
     const onPopupEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        // this.setDefaultView();
         unrender(this._filmDetails.getElement());
         document.removeEventListener(`keydown`, onPopupEscKeyDown);
       }
@@ -101,7 +99,7 @@ export class MovieController {
                pressed.has(`ControlRight`) ||
                pressed.has(`MetaLeft`) ||
                pressed.has(`MetaRight`)) &&
-               pressed.has(`Enter`))) {
+               pressed.has(`Enter`) && pressed.size === 2)) {
           return;
         }
         console.log(pressed);
@@ -146,6 +144,7 @@ export class MovieController {
   setDefaultView() {
     if (document.contains(this._filmDetails.getElement())) {
       unrender(this._filmDetails.getElement());
+      this._filmDetails.removeElement();
     }
   }
 }
