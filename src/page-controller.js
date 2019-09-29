@@ -34,6 +34,14 @@ export class PageController {
     this._renderBoard();
   }
 
+  hide() {
+    this._board.getElement().classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._board.getElement().classList.remove(`visually-hidden`);
+  }
+
   _onDataChange(newData, oldData, id = null) {
     const changedIndex = this._data.findIndex((it) => it === oldData);
     this._data[changedIndex] = newData;
@@ -79,7 +87,7 @@ export class PageController {
     mostCommentedFilmsData
       .forEach((it) => this._renderFilm(it, this._getMostCommentedFilmsListElement(), id));
 
-    render(this._container, this._sort .getElement(), Position.BEFOREEND);
+    render(this._board.getElement(), this._sort .getElement(), Position.AFTERBEGIN);
     render(this._container, this._board.getElement(), Position.BEFOREEND);
 
     if (this._data.length !== this._showedFilms.length) {
