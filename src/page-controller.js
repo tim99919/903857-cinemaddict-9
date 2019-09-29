@@ -44,8 +44,22 @@ export class PageController {
 
   _onDataChange(newData, oldData, id = null) {
     const changedIndex = this._data.findIndex((it) => it === oldData);
+
+    if (newData === null) {
+      if (oldData.comments.includes(null)) {
+        const deletedCommentIndex = oldData.comments.findIndex((it) => it === null);
+        this._data[changedIndex].comments = [...oldData.comments.slice(0, deletedCommentIndex), ...oldData.comments.slice(deletedCommentIndex + 1)];
+      }
+
+      this._data[changedIndex].comments = oldData.comments;
+
+      this._renderBoard(id);
+      return;
+    }
+
     this._data[changedIndex] = newData;
     this._showedFilms[changedIndex] = newData;
+
     this._renderBoard(id);
   }
 

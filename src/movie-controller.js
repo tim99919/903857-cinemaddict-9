@@ -2,13 +2,14 @@ import {Film} from './components/film';
 import {FilmPopup} from './components/film-popup';
 import {Comment} from './components/comment';
 import {render, unrender, Position} from './utils';
+import { getComment } from './services/comments-data';
 
 export class MovieController {
-  constructor(container, data, onDataChange, _onChangeView, filmDetilsOpenedId = null) {
+  constructor(container, data, onDataChange, onChangeView, filmDetilsOpenedId = null) {
     this._container = container;
     this._data = data;
     this._onDataChange = onDataChange;
-    this._onChangeView = _onChangeView;
+    this._onChangeView = onChangeView;
     this._filmDetilsOpenedId = filmDetilsOpenedId;
     this._film = new Film(data);
     this._filmDetails = new FilmPopup(data);
@@ -36,6 +37,7 @@ export class MovieController {
       document.addEventListener(`keydown`, onPopupEscKeyDown);
       this._filmDetails.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, onFilmDetailsFormControlsClick);
       this._filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
+      this._filmDetails.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, onCommentDeleteButtonClick);
       this._filmDetails.getElement().querySelector(`.film-details__new-comment`).addEventListener(`focus`, onCommentFocus, true);
     }
 
@@ -54,6 +56,7 @@ export class MovieController {
     const onFilmFormControlsClick = (evt) => {
       const oldData = this._data;
       const newData = {...this._data};
+
       evt.preventDefault();
 
       if (evt.target.className.includes(`film-card__controls-item--add-to-watchlist`) ||
@@ -95,42 +98,48 @@ export class MovieController {
       const onCommentCtrlEnterKeydown = (evt) => {
         pressed.add(evt.code);
 
-        if (!((pressed.has(`ControlLeft`) ||
-               pressed.has(`ControlRight`) ||
-               pressed.has(`MetaLeft`) ||
-               pressed.has(`MetaRight`)) &&
-               pressed.has(`Enter`) && pressed.size === 2)) {
+        if (!((evt.metaKey || evt.ctrlKey) && pressed.has(`Enter`) && pressed.size === 2)) {
           return;
         }
-        console.log(pressed);
 
         pressed.clear();
 
-        unrender(this._filmDetails.getElement());
-        this._filmDetails.removeElement();
-        this._onDataChange(null, null, this._data.id);
+        if (evt.target.value) {
+
+          this._onChangeView();
+
+          this._data.comments.push(getComment());
+
+          this._onDataChange(null, this._data, this._data.id);
+        }
       }
 
       const onCommentCtrlEnterKeyup = (evt) => {
         pressed.delete(evt.code);
-
-        // document.removeEventListener('keydown', onCommentCtrlEnterKeydown);
-        // document.removeEventListener('keyup', onCommentCtrlEnterKeyup);
       };
 
       const onCommentBlur = () => {
         document.removeEventListener('keydown', onCommentCtrlEnterKeydown);
         document.removeEventListener('keyup', onCommentCtrlEnterKeyup);
-        console.log(`blured`);
       }
 
       this._filmDetails.getElement().querySelector(`.film-details__new-comment`).addEventListener(`blur`, onCommentBlur, true);
 
       document.addEventListener('keydown', onCommentCtrlEnterKeydown);
       document.addEventListener('keyup', onCommentCtrlEnterKeyup);
-      console.log(`focused`);
-
     };
+
+    const onCommentDeleteButtonClick = (evt) => {
+      const deletedCommentIndex = [...evt.target.offsetParent.querySelectorAll('.film-details__comment-delete')].findIndex(it => it === evt.target);
+
+      evt.preventDefault();
+
+      if (evt.target.className === `film-details__comment-delete`) {
+        this._data.comments[deletedCommentIndex] = null;
+        this._onChangeView();
+        this._onDataChange(null, this._data, this._data.id);
+      }
+    }
 
     this._film.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, onFilmFormControlsClick);
     this._film.getElement().addEventListener(`click`, onFilmCardClick);
