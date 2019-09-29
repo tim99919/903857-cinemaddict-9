@@ -4,6 +4,7 @@ import {SiteMenu} from './components/site-menu.js';
 import {films as data} from './services/data.js';
 import {getRandomInt, render, Position, createElement} from './utils.js';
 import {PageController} from './page-controller.js';
+import {Statistics} from './components/statistics.js';
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -30,7 +31,13 @@ const renderFooterFilmsCounter = () => {
   render(footerStatistics, createElement(`<p>${data.length} movies inside</p>`), Position.AFTEREND);
 };
 
+const renderStatictisc = () => {
+  const staticstics = new Statistics();
+  render(mainElement, staticstics.getElement(), Position.BEFOREEND);
+};
+
 renderHeader();
 renderMenu();
 pageController.init();
+renderStatictisc();
 renderFooterFilmsCounter();
