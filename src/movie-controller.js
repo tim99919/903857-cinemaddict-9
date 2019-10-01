@@ -30,8 +30,6 @@ export class MovieController {
     };
 
     const renderFilmDetails = () => {
-      this._onChangeView();
-
       render(document.body, this._filmDetails.getElement(), Position.BEFOREEND);
       this._filmComments.forEach((it) => render(this._filmDetails.getElement().querySelector(`.film-details__comments-list`), it.getElement(), Position.BEFOREEND));
       document.addEventListener(`keydown`, onPopupEscKeyDown);
@@ -79,7 +77,6 @@ export class MovieController {
 
       evt.preventDefault();
       this._onChangeView();
-      this._filmDetails.removeElement();
 
       if (evt.target.className.includes(`film-details__control-label--watchlist`)) {
         newData.isWatchlisted = !newData.isWatchlisted;
@@ -146,6 +143,7 @@ export class MovieController {
     render(this._container, this._film.getElement(), Position.BEFOREEND);
 
     if (this._filmDetilsOpenedId === this._data.id) {
+      this._onChangeView();
       renderFilmDetails();
     }
   }
