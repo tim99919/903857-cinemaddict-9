@@ -5,12 +5,13 @@ import {render, unrender, Position} from './utils';
 import { getComment } from './services/comments-data';
 
 export class MovieController {
-  constructor(container, data, onDataChange, onChangeView, filmDetilsOpenedId = null) {
+  constructor(container, data, onDataChange, onChangeView, filmDetilsOpenedId = null, filmPopupStateController) {
     this._container = container;
     this._data = data;
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
     this._filmDetilsOpenedId = filmDetilsOpenedId;
+    this._filmPopupStateController = filmPopupStateController;
     this._film = new Film(data);
     this._filmDetails = new FilmPopup(data);
     this._filmComments = data.comments.map((it) => new Comment(it));
@@ -37,16 +38,22 @@ export class MovieController {
       this._filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onPopupCloseButtonClick);
       this._filmDetails.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, onCommentDeleteButtonClick);
       this._filmDetails.getElement().querySelector(`.film-details__new-comment`).addEventListener(`focus`, onCommentFocus, true);
+
+      // this._filmPopupStateController.toggleFilmPopupState();
+      this._filmPopupStateController.setOpened();
     }
 
     const onPopupCloseButtonClick = () => {
-      unrender(this._filmDetails.getElement());
+      // unrender(this._filmDetails.getElement());
+      this.setDefaultView();
+
       document.removeEventListener(`keydown`, onPopupEscKeyDown);
     };
 
     const onPopupEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        unrender(this._filmDetails.getElement());
+        // unrender(this._filmDetails.getElement());
+        this.setDefaultView();
         document.removeEventListener(`keydown`, onPopupEscKeyDown);
       }
     };
@@ -142,7 +149,7 @@ export class MovieController {
     this._film.getElement().addEventListener(`click`, onFilmCardClick);
     render(this._container, this._film.getElement(), Position.BEFOREEND);
 
-    if (this._filmDetilsOpenedId === this._data.id) {
+    if (this._filmDetilsOpenedId === this._data.id && !this._filmPopupStateController.getState()) {
       this._onChangeView();
       renderFilmDetails();
     }
@@ -152,6 +159,7 @@ export class MovieController {
     if (document.contains(this._filmDetails.getElement())) {
       unrender(this._filmDetails.getElement());
       this._filmDetails.removeElement();
+      this._filmPopupStateController.setClosed();
     }
   }
 }

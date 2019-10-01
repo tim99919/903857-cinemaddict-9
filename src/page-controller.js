@@ -3,6 +3,7 @@ import {Sorting} from './components/sorting';
 import {ShowMoreButton} from './components/show-more-button';
 import {render, unrender, Position} from './utils';
 import {FilmListController} from './film-list-controller';
+import { FilmPopupStateController } from './film-popup-state-controller';
 
 const START_FILMS_COUNT = 5;
 const TOP_RATED_FILMS_COUNT = 2;
@@ -15,11 +16,11 @@ export class PageController {
     this._board = new Board();
     this._sort = new Sorting();
     this._showMoreButton = new ShowMoreButton();
-
+    this._filmPopupStateController = new FilmPopupStateController();
 
     this._showedFilms = [];
     this._onDataChange = this._onDataChange.bind(this);
-    this._filmDetailState = {opened: false};
+    // this._filmDetailState = {opened: false};
   }
 
   init() {
@@ -95,9 +96,9 @@ export class PageController {
 
     this._unrenderFilmBoard();
 
-    const filmListController = new FilmListController(this._getFilmsListElement(), this._showedFilms, this._onDataChange, id);
-    const filmListTopRatedController = new FilmListController(this._getTopRatedFilmsListElement(), topRatedFilmsData, this._onDataChange);
-    const filmListMostCommentedController = new FilmListController(this._getMostCommentedFilmsListElement(), mostCommentedFilmsData, this._onDataChange);
+    const filmListController = new FilmListController(this._getFilmsListElement(), this._showedFilms, this._onDataChange, id, this._filmPopupStateController);
+    const filmListTopRatedController = new FilmListController(this._getTopRatedFilmsListElement(), topRatedFilmsData, this._onDataChange, id, this._filmPopupStateController);
+    const filmListMostCommentedController = new FilmListController(this._getMostCommentedFilmsListElement(), mostCommentedFilmsData, this._onDataChange, id, this._filmPopupStateController);
 
     render(this._board.getElement(), this._sort .getElement(), Position.AFTERBEGIN);
 

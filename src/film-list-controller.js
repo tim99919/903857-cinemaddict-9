@@ -2,7 +2,7 @@ import {MovieController} from './movie-controller';
 import {ShowMoreButton} from './components/show-more-button';
 
 export class FilmListController {
-  constructor(container, data, onDataChange, filmDetailsOpenedId) {
+  constructor(container, data, onDataChange, filmDetailsOpenedId, filmPopupStateController) {
     this._container = container;
     this._data = data;
     this._onDataChangeMain = onDataChange;
@@ -10,6 +10,8 @@ export class FilmListController {
 
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._filmPopupStateController = filmPopupStateController;
+    // this._isOpenedDetails = false;
 
     this._showMoreButton = new ShowMoreButton();
 
@@ -21,12 +23,14 @@ export class FilmListController {
     this._renderFilmList();
   }
 
+
+
   _onChangeView() {
     this._subscriptions.forEach((it) => it());
   }
 
   _onDataChange(newData, oldData, id) {
-    // Изменения происзодят отсюда поэтому должен рендериться один фильм
+    // Изменения происходят отсюда поэтому должен рендериться один фильм
     // Перенести метод сюда
     this._filmDetailsOpenedId = id;
     const changedIndex = this._data.findIndex((it) => it === oldData);
@@ -55,7 +59,7 @@ export class FilmListController {
   }
 
   _renderFilm(filmData, container) {
-    const movieController = new MovieController(container, filmData, this._onDataChange, this._onChangeView, this._filmDetailsOpenedId);
+    const movieController = new MovieController(container, filmData, this._onDataChange, this._onChangeView, this._filmDetailsOpenedId, this._filmPopupStateController);
     this._subscriptions.push(movieController.setDefaultView.bind(movieController));
   }
 
