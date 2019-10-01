@@ -5,9 +5,11 @@ export class FilmListController {
   constructor(container, data, onDataChange, filmDetailsOpenedId) {
     this._container = container;
     this._data = data;
-    this._onDataChange = onDataChange;
+    this._onDataChangeMain = onDataChange;
     this._filmDetailsOpenedId = filmDetailsOpenedId;
+
     this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
 
     this._showMoreButton = new ShowMoreButton();
 
@@ -16,12 +18,40 @@ export class FilmListController {
   }
 
   init() {
-    this._data
-    .forEach((it) => this._renderFilm(it, this._container, this._filmDetailsOpened));
+    this._renderFilmList();
   }
 
   _onChangeView() {
     this._subscriptions.forEach((it) => it());
+  }
+
+  _onDataChange(newData, oldData, id) {
+    // Изменения происзодят отсюда поэтому должен рендериться один фильм
+    // Перенести метод сюда
+    this._filmDetailsOpenedId = id;
+    const changedIndex = this._data.findIndex((it) => it === oldData);
+
+    if (newData === null) {
+      if (oldData.comments.includes(null)) {
+        const deletedCommentIndex = oldData.comments.findIndex((it) => it === null);
+        this._data[changedIndex].comments = [...oldData.comments.slice(0, deletedCommentIndex), ...oldData.comments.slice(deletedCommentIndex + 1)];
+      }
+
+      this._data[changedIndex].comments = oldData.comments;
+
+      // return;
+    }
+
+    this._data[changedIndex] = newData;
+    // if (parseInt(id, 10) < this._showedFilms.length + 1) {
+    //   this._showedFilms[changedIndex] = newData;
+    // }
+
+    this._onDataChangeMain(this._data, this._filmDetailsOpenedId);
+  }
+
+  _renderFilmList() {
+    this._data.forEach((it) => this._renderFilm(it, this._container, this._filmDetailsOpened));
   }
 
   _renderFilm(filmData, container) {

@@ -4,6 +4,10 @@ import {ShowMoreButton} from './components/show-more-button';
 import {render, unrender, Position} from './utils';
 import {FilmListController} from './film-list-controller';
 
+const START_FILMS_COUNT = 5;
+const TOP_RATED_FILMS_COUNT = 2;
+const MOST_COMMENT_FILMS_COUNT = 2;
+
 export class PageController {
   constructor(container, data) {
     this._container = container;
@@ -14,8 +18,8 @@ export class PageController {
 
 
     this._showedFilms = [];
-    this._START_FILMS_COUNT = 5;
     this._onDataChange = this._onDataChange.bind(this);
+    this._filmDetailState = {opened: false};
   }
 
   init() {
@@ -28,7 +32,7 @@ export class PageController {
       return;
     }
 
-    this._showedFilms.push(...this._data.slice(0, this._START_FILMS_COUNT));
+    this._showedFilms.push(...this._data.slice(0, START_FILMS_COUNT));
 
     this._renderBoard();
   }
@@ -41,26 +45,29 @@ export class PageController {
     this._board.getElement().classList.remove(`visually-hidden`);
   }
 
-  _onDataChange(newData, oldData, id = null) {
-    const changedIndex = this._data.findIndex((it) => it === oldData);
+  _onDataChange(newData, id) {
+    // const changedIndex = this._data.findIndex((it) => it === oldData);
 
-    if (newData === null) {
-      if (oldData.comments.includes(null)) {
-        const deletedCommentIndex = oldData.comments.findIndex((it) => it === null);
-        this._data[changedIndex].comments = [...oldData.comments.slice(0, deletedCommentIndex), ...oldData.comments.slice(deletedCommentIndex + 1)];
-      }
+    // if (newData === null) {
+    //   if (oldData.comments.includes(null)) {
+    //     const deletedCommentIndex = oldData.comments.findIndex((it) => it === null);
+    //     this._data[changedIndex].comments = [...oldData.comments.slice(0, deletedCommentIndex), ...oldData.comments.slice(deletedCommentIndex + 1)];
+    //   }
 
-      this._data[changedIndex].comments = oldData.comments;
+    //   this._data[changedIndex].comments = oldData.comments;
 
-      this._renderBoard(id);
-      return;
-    }
+    //   this._renderBoard(id);
+    //   return;
+    // }
 
-    this._data[changedIndex] = newData;
-    if (parseInt(id, 10) < this._showedFilms.length + 1) {
-      this._showedFilms[changedIndex] = newData;
-    }
+    // this._data[changedIndex] = newData;
+    // if (parseInt(id, 10) < this._showedFilms.length + 1) {
+    //   this._showedFilms[changedIndex] = newData;
+    // }
 
+    // this._renderBoard(id);
+
+    this._data = newData;
     this._renderBoard(id);
   }
 
@@ -79,25 +86,18 @@ export class PageController {
   }
 
   _renderBoard(id = null) {
-    const TOP_RATED_FILMS_COUNT = 2;
-    const MOST_COMMENT_FILMS_COUNT = 2;
-
     const topRatedFilmsData = this._data.slice()
                                          .sort((a, b) => b.raiting - a.raiting)
                                          .slice(0, TOP_RATED_FILMS_COUNT);
     const mostCommentedFilmsData = this._data.slice()
-                                             .sort((a, b) => b.comments.length - a.comments.length)
-                                             .slice(0, MOST_COMMENT_FILMS_COUNT);
+                                         .sort((a, b) => b.comments.length - a.comments.length)
+                                         .slice(0, MOST_COMMENT_FILMS_COUNT);
 
-    unrender(this._board.getElement());
-    unrender(this._showMoreButton.getElement());
-    this._board.removeElement();
-    this._showMoreButton.removeElement();
-    this._subscriptions = [];
+    this._unrenderFilmBoard();
 
     const filmListController = new FilmListController(this._getFilmsListElement(), this._showedFilms, this._onDataChange, id);
-    const filmListTopRatedController = new FilmListController(this._getTopRatedFilmsListElement(), topRatedFilmsData, this._onDataChange, id);
-    const filmListMostCommentedController = new FilmListController(this._getMostCommentedFilmsListElement(), mostCommentedFilmsData, this._onDataChange, id);
+    const filmListTopRatedController = new FilmListController(this._getTopRatedFilmsListElement(), topRatedFilmsData, this._onDataChange);
+    const filmListMostCommentedController = new FilmListController(this._getMostCommentedFilmsListElement(), mostCommentedFilmsData, this._onDataChange);
 
     render(this._board.getElement(), this._sort .getElement(), Position.AFTERBEGIN);
 
@@ -112,6 +112,14 @@ export class PageController {
     }
 
     render(this._container, this._board.getElement(), Position.BEFOREEND);
+  }
+
+  _unrenderFilmBoard() {
+    unrender(this._board.getElement());
+    unrender(this._showMoreButton.getElement());
+    this._board.removeElement();
+    this._showMoreButton.removeElement();
+    this._subscriptions = [];
   }
 
   _onShowMoreButtonClick() {
